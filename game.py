@@ -1,6 +1,15 @@
 import pygame
 import time
 #import random
+import sys
+import os
+
+def resource_path(relative_path):
+    try:
+        base_path = sys._MEIPASS
+    except:
+        base_path = os.path.abspath(".")
+    return os.path.join(base_path, relative_path)
 from settings import WIDTH, HEIGHT,  SNAKE_SPEED,SNAKE_BLOCK
 from display import display_score, draw_snake, show_message 
 from food import generate_food
@@ -8,7 +17,7 @@ from food import generate_food
 # Initialize Pygame
 pygame.init()
 
-# Display settings
+# Display settingsA
 SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption('Snake Game : Made By :  Abhishek Yadav || Vivek Yadav || Sushant Singh || Narayn')
 
@@ -19,7 +28,9 @@ score_font = pygame.font.SysFont("comicsansms", 35)
 # Main function for the game
 def gameLoop():
     
-    cl=pygame.mixer.Sound("MP3.mp3")
+    # cl=pygame.mixer.Sound("MP3.mp3")
+    cl = pygame.mixer.Sound(resource_path("sounds/MP3.mp3"))
+    # cl=pygame.mixer.Sound(resource_path("MP3.mp3"))
     pygame.mixer.Sound.play(cl)
     
     game_over = False
@@ -47,7 +58,8 @@ def gameLoop():
             pygame.display.update()
             
             if i==1:
-                sm=pygame.mixer.Sound("distory.wav")
+                # sm=pygame.mixer.Sound("distory.wav")
+                sm = pygame.mixer.Sound(resource_path("sounds/distory.wav"))
                 pygame.mixer.Sound.play(sm)
             i=i+1
             
@@ -57,15 +69,17 @@ def gameLoop():
                 
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_q:
-                        game_over = True
-                        game_close = False
+                        pygame.quit()
+                        sys.exit()
                         
                     if event.key == pygame.K_c:
-                        gameLoop()
+                       return 
 
         for event in pygame.event.get():
+            
             if event.type == pygame.QUIT:
-                game_over = True
+                pygame.quit()
+                sys.exit()    
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_LEFT:
                     x1_change = -SNAKE_BLOCK
@@ -106,14 +120,18 @@ def gameLoop():
         if x1 == foodx and y1 == foody:
             foodx, foody = generate_food(WIDTH, HEIGHT, SNAKE_BLOCK)
             Length_of_snake += 1
-            son=pygame.mixer.Sound("eat.wav")
+            # son=pygame.mixer.Sound("eat.wav")
+            son = pygame.mixer.Sound(resource_path("sounds/eat.wav"))
             pygame.mixer.Sound.play(son)
             
             
         clock.tick(SNAKE_SPEED)
 
     pygame.quit()
-    quit()
+    sys.exit()
 
 
-gameLoop()       
+# gameLoop()
+
+while True:
+    gameLoop()
